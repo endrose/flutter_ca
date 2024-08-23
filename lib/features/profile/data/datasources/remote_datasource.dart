@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter_ca_1/core/error/exception.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../core/error/exception.dart';
 import '../models/profile_model.dart';
 
 abstract class ProfileRemoteDataSource {
@@ -22,9 +22,12 @@ class ProfileRemoteDataSourceImplementation extends ProfileRemoteDataSource {
     if (response.statusCode == 200) {
       Map<String, dynamic> dataBody = jsonDecode(response.body);
       List<dynamic> data = dataBody["data"];
+
+      if (data.isEmpty) throw EmptyException(message: "Error empty data");
+
       return ProfileModel.fromJsonList(data);
     } else if (response.statusCode == 404) {
-      throw EmptyException(message: "Data not found!");
+      throw StatusCodeException(message: "Data not found!");
     } else {
       throw GeneralException(message: "cannot get data");
     }
