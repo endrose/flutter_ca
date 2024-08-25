@@ -13,7 +13,9 @@ abstract class ProfileRemoteDataSource {
 class ProfileRemoteDataSourceImplementation extends ProfileRemoteDataSource {
   final http.Client client;
 
-  ProfileRemoteDataSourceImplementation({required this.client});
+  ProfileRemoteDataSourceImplementation({
+    required this.client,
+  });
 
   @override
   Future<List<ProfileModel>> getAllUser(int page) async {

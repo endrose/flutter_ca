@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_ca_1/features/profile/domain/entities/profile.dart';
+import '../entities/profile.dart';
 
 import '../../../../core/error/failure.dart';
 import '../repositories/profile_repository.dart';

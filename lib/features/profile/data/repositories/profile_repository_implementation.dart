@@ -12,20 +12,20 @@ import '../models/profile_model.dart';
 class ProfileRepositoryImplementation extends ProfileRepository {
   final ProfileRemoteDataSource profileRemoteDataSourceFileSource;
   final ProfileLocalDataSource profileLocalDataSource;
-  final HiveInterface hive;
+  final Box box;
 
   ProfileRepositoryImplementation({
     required this.profileRemoteDataSourceFileSource,
     required this.profileLocalDataSource,
-    required this.hive,
+    required this.box,
   });
 
   @override
   Future<Either<Failure, List<Profile>>> getAllUser(int page) async {
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
     // Cek error
     try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
       // cek internet
 
       if (connectivityResult.contains(ConnectivityResult.none)) {
@@ -38,7 +38,6 @@ class ProfileRepositoryImplementation extends ProfileRepository {
             await profileRemoteDataSourceFileSource.getAllUser(page);
 
         // save to local data
-        var box = hive.box("profile_box");
         box.put("getAllUser", hasil);
 
         return Right(hasil);
@@ -50,9 +49,9 @@ class ProfileRepositoryImplementation extends ProfileRepository {
 
   @override
   Future<Either<Failure, Profile>> getUser(int id) async {
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
     try {
+      final List<ConnectivityResult> connectivityResult =
+          await (Connectivity().checkConnectivity());
       if (connectivityResult.contains(ConnectivityResult.none)) {
         ProfileModel hasil = await profileLocalDataSource.getUser(id);
 
@@ -62,7 +61,6 @@ class ProfileRepositoryImplementation extends ProfileRepository {
             await profileRemoteDataSourceFileSource.getUser(id);
 
         // save to local data
-        var box = hive.box("profile_box");
         box.put("getUser", hasil);
 
         return Right(hasil);
